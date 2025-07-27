@@ -1,1 +1,516 @@
+--[[ 
+    NEAJHUB - Animal Simulator Script (Mobile/Delta Executor)
+    Exclusivo para PlaceId: 5130598377
+    Feito por NeajHube | 2025
+    Otimizado, moderno e seguro!
+]]
 
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[🧠] 1. DETECÇÃO INTELIGENTE
+local PLACE_ID = 5130598377
+if game.PlaceId ~= PLACE_ID then
+    local msg = Instance.new("Message", workspace)
+    msg.Text = "❌ Este script é exclusivo para Animal Simulator."
+    task.wait(5)
+    msg:Destroy()
+    return
+end
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[⚙️] DEPENDÊNCIAS E UTILIDADES
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+local Camera = workspace.CurrentCamera
+
+--[UI Utils]
+local function createTween(obj, prop, dur, style, dir)
+    TweenService:Create(obj, TweenInfo.new(dur, style or Enum.EasingStyle.Quad, dir or Enum.EasingDirection.Out), prop):Play()
+end
+local function playClick()
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://9116574176" -- Suave click
+    sound.Volume = 0.5
+    sound.Parent = LocalPlayer:FindFirstChild("PlayerGui") or workspace
+    sound:Play()
+    game:GetService("Debris"):AddItem(sound, 1)
+end
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[🧰] 2. MENU NEAJHUB PROFISSIONAL
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "NEAJHUB"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+--[Botão Fixado]
+local OpenBtn = Instance.new("ImageButton")
+OpenBtn.Size = UDim2.new(0, 44, 0, 44)
+OpenBtn.Position = UDim2.new(0, 10, 0.5, -22)
+OpenBtn.Image = "rbxassetid://13549283085"
+OpenBtn.BackgroundTransparency = 0.3
+OpenBtn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+OpenBtn.BorderSizePixel = 0
+OpenBtn.Name = "OpenBtn"
+OpenBtn.Parent = ScreenGui
+
+local stroke = Instance.new("UIStroke", OpenBtn)
+stroke.Color = Color3.fromRGB(0,255,180)
+stroke.Thickness = 2
+OpenBtn.ImageColor3 = Color3.fromRGB(0,255,180)
+OpenBtn.AutoButtonColor = true
+OpenBtn.AnchorPoint = Vector2.new(0,0.5)
+local UICorner = Instance.new("UICorner", OpenBtn)
+UICorner.CornerRadius = UDim.new(0, 20)
+
+--[Menu Principal]
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Size = UDim2.new(0, 370, 0, 415)
+MenuFrame.Position = UDim2.new(0, 65, 0.5, -207)
+MenuFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+MenuFrame.BackgroundTransparency = 0.1
+MenuFrame.Visible = false
+MenuFrame.Parent = ScreenGui
+MenuFrame.Name = "MainMenu"
+MenuFrame.BorderSizePixel = 0
+local MenuStroke = Instance.new("UIStroke", MenuFrame)
+MenuStroke.Color = Color3.fromRGB(0,255,180)
+MenuStroke.Thickness = 2
+local MenuCorner = Instance.new("UICorner", MenuFrame)
+MenuCorner.CornerRadius = UDim.new(0, 18)
+
+--[Titulo]
+local Title = Instance.new("TextLabel", MenuFrame)
+Title.Text = "NEAJHUB"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 32
+Title.TextColor3 = Color3.fromRGB(0,255,180)
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1,0,0,45)
+Title.Position = UDim2.new(0,0,0,0)
+Title.Name = "Title"
+Title.TextStrokeTransparency = 0.5
+Title.TextStrokeColor3 = Color3.fromRGB(0,255,180)
+
+local PlayerName = Instance.new("TextLabel", MenuFrame)
+PlayerName.Text = "👤 "..LocalPlayer.Name
+PlayerName.Font = Enum.Font.Gotham
+PlayerName.TextSize = 18
+PlayerName.TextColor3 = Color3.fromRGB(200,255,255)
+PlayerName.BackgroundTransparency = 1
+PlayerName.Size = UDim2.new(1,0,0,22)
+PlayerName.Position = UDim2.new(0,0,0,45)
+PlayerName.TextXAlignment = Enum.TextXAlignment.Left
+
+--[Abas]
+local Tabs = {
+    {"🐾", "Personagens"},
+    {"💀", "Regeneração"},
+    {"🔥", "Farm"},
+    {"💪", "Treinamento"},
+    {"🚀", "Fly/Speed"},
+    {"👑", "ADM"},
+    {"⚙️", "Otimização"},
+    {"👻", "Extras"},
+}
+
+local TabBtns = {}
+local TabFrames = {}
+
+for i,v in ipairs(Tabs) do
+    local tabBtn = Instance.new("TextButton", MenuFrame)
+    tabBtn.Text = v[1].."\n"..v[2]
+    tabBtn.Font = Enum.Font.GothamBold
+    tabBtn.Size = UDim2.new(0, 70, 0, 58)
+    tabBtn.Position = UDim2.new(0, 8 + (i-1)*74, 0, 75)
+    tabBtn.BackgroundColor3 = Color3.fromRGB(20,20,30)
+    tabBtn.TextColor3 = Color3.fromRGB(0,255,180)
+    tabBtn.BorderSizePixel = 0
+    tabBtn.Name = "TabBtn"..i
+    Instance.new("UICorner", tabBtn).CornerRadius = UDim.new(0, 12)
+    Instance.new("UIStroke", tabBtn).Color = Color3.fromRGB(0,255,180)
+    TabBtns[i] = tabBtn
+    tabBtn.MouseButton1Click:Connect(function()
+        playClick()
+        for j,frame in pairs(TabFrames) do
+            frame.Visible = (j == i)
+            TabBtns[j].BackgroundColor3 = frame.Visible and Color3.fromRGB(0,25,60) or Color3.fromRGB(20,20,30)
+        end
+    end)
+    --[Conteúdo das abas]
+    local tabFrame = Instance.new("Frame", MenuFrame)
+    tabFrame.Size = UDim2.new(1,-24,1,-150)
+    tabFrame.Position = UDim2.new(0,12,0,140)
+    tabFrame.BackgroundTransparency = 1
+    tabFrame.Visible = (i==1)
+    tabFrame.Name = "TabFrame"..i
+    TabFrames[i] = tabFrame
+end
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[🐾] 3. DESBLOQUEIO DE PERSONAGENS
+
+local function UnlockPersonagens()
+    -- Tenta desbloquear todos os personagens via RemoteEvents
+    local chrList = {"Dragon","Wolf","Bear","Dinosaur","Bird"}
+    for _,chr in ipairs(chrList) do
+        local remote = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("ChangeAnimal") or nil
+        if remote then
+            pcall(function()
+                remote:FireServer(chr)
+            end)
+        else
+            -- Busca algum método alternativo se Remote não existir
+            local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+            if Remotes and Remotes:FindFirstChild("ChangeAnimal") then
+                Remotes.ChangeAnimal:FireServer(chr)
+            end
+        end
+    end
+end
+
+local chrTab = TabFrames[1]
+local unlockBtn = Instance.new("TextButton", chrTab)
+unlockBtn.Text = "🔓 Desbloquear TODOS"
+unlockBtn.Size = UDim2.new(0, 180, 0, 40)
+unlockBtn.Position = UDim2.new(0,10,0,10)
+unlockBtn.Font = Enum.Font.GothamBold
+unlockBtn.TextColor3 = Color3.fromRGB(0,255,180)
+unlockBtn.BackgroundColor3 = Color3.fromRGB(40,40,60)
+unlockBtn.Name = "UnlockPersonagens"
+Instance.new("UICorner", unlockBtn).CornerRadius = UDim.new(0, 10)
+unlockBtn.MouseButton1Click:Connect(function()
+    playClick()
+    UnlockPersonagens()
+    StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="Todos os personagens liberados!",Icon="rbxassetid://13549283085",Duration=3})
+end)
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[💀] 4. MODO DE REGENERAÇÃO AUTOMÁTICA
+
+local regenTab = TabFrames[2]
+local autoRegen = false
+local autoRegenBtn = Instance.new("TextButton", regenTab)
+autoRegenBtn.Text = "🩸 Ativar Auto-Regeneração"
+autoRegenBtn.Size = UDim2.new(0, 200, 0, 40)
+autoRegenBtn.Position = UDim2.new(0,10,0,10)
+autoRegenBtn.Font = Enum.Font.GothamBold
+autoRegenBtn.TextColor3 = Color3.fromRGB(255,80,120)
+autoRegenBtn.BackgroundColor3 = Color3.fromRGB(50,30,40)
+Instance.new("UICorner", autoRegenBtn).CornerRadius = UDim.new(0, 10)
+autoRegenBtn.Name = "AutoRegenBtn"
+
+autoRegenBtn.MouseButton1Click:Connect(function()
+    playClick()
+    autoRegen = not autoRegen
+    autoRegenBtn.Text = autoRegen and "🩸 Auto-Regeneração ATIVADA" or "🩸 Ativar Auto-Regeneração"
+    StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="Modo Regeneração "..(autoRegen and "Ativado!" or "Desativado!"),Icon="",Duration=3})
+end)
+
+RunService.Heartbeat:Connect(function()
+    if autoRegen and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        local hum = LocalPlayer.Character.Humanoid
+        if hum.Health/hum.MaxHealth < 0.25 then
+            hum.Health = math.min(hum.MaxHealth, hum.Health + hum.MaxHealth*0.6)
+            -- efeito visual
+            if not LocalPlayer.Character:FindFirstChild("RegenEffect") then
+                local effect = Instance.new("ParticleEmitter", LocalPlayer.Character:FindFirstChild("HumanoidRootPart"))
+                effect.Name = "RegenEffect"
+                effect.Color = ColorSequence.new(Color3.fromRGB(255,80,120))
+                effect.LightEmission = 1
+                effect.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(1,0)})
+                effect.Rate = 20
+                game:GetService("Debris"):AddItem(effect,1)
+            end
+        end
+    end
+end)
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[🔥] 5. FARM E COMBATE AUTOMÁTICO
+
+local farmTab = TabFrames[3]
+local autoFarm = false
+local farmBtn = Instance.new("TextButton", farmTab)
+farmBtn.Text = "🔥 Farm Boss"
+farmBtn.Size = UDim2.new(0, 180, 0, 40)
+farmBtn.Position = UDim2.new(0,10,0,10)
+farmBtn.Font = Enum.Font.GothamBold
+farmBtn.TextColor3 = Color3.fromRGB(255,140,0)
+farmBtn.BackgroundColor3 = Color3.fromRGB(40,30,10)
+Instance.new("UICorner", farmBtn).CornerRadius = UDim.new(0, 10)
+farmBtn.Name = "FarmBtn"
+
+farmBtn.MouseButton1Click:Connect(function()
+    playClick()
+    autoFarm = not autoFarm
+    farmBtn.Text = autoFarm and "🔥 Farm Boss ATIVADO" or "🔥 Farm Boss"
+    StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="Farm Boss "..(autoFarm and "Ativado!" or "Desativado!"),Icon="",Duration=3})
+end)
+
+local function findBoss()
+    -- Busca bosses conhecidos
+    for _,v in pairs(workspace:GetChildren()) do
+        if v:IsA("Model") and (v.Name:lower():find("boss") or v.Name:lower():find("dragon")) and v:FindFirstChild("HumanoidRootPart") then
+            return v
+        end
+    end
+    return nil
+end
+
+RunService.Heartbeat:Connect(function()
+    if autoFarm and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local boss = findBoss()
+        if boss and boss:FindFirstChild("HumanoidRootPart") then
+            local char = LocalPlayer.Character
+            char:MoveTo(boss.HumanoidRootPart.Position + Vector3.new(math.random(-6,6),0,math.random(-6,6)))
+            -- Ataca boss
+            local attackRemote = char:FindFirstChild("Attack") or (game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") and game:GetService("ReplicatedStorage").Remotes:FindFirstChild("Attack"))
+            if attackRemote then
+                pcall(function()
+                    attackRemote:FireServer(boss)
+                end)
+            end
+            -- Recuo anti-ban
+            if math.random() < 0.2 then
+                char:MoveTo(boss.HumanoidRootPart.Position + Vector3.new(math.random(-25,25),0,math.random(-25,25)))
+                task.wait(0.3)
+            end
+        end
+    end
+end)
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[💪] 6. TREINAMENTO RÁPIDO
+
+local trainTab = TabFrames[4]
+local trainBtn = Instance.new("TextButton", trainTab)
+trainBtn.Text = "🔥 Train x10"
+trainBtn.Size = UDim2.new(0, 180, 0, 40)
+trainBtn.Position = UDim2.new(0,10,0,10)
+trainBtn.Font = Enum.Font.GothamBold
+trainBtn.TextColor3 = Color3.fromRGB(255,80,0)
+trainBtn.BackgroundColor3 = Color3.fromRGB(40,20,10)
+Instance.new("UICorner", trainBtn).CornerRadius = UDim.new(0, 10)
+trainBtn.Name = "TrainBtn"
+
+trainBtn.MouseButton1Click:Connect(function()
+    playClick()
+    for i=1,10 do
+        local remote = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Train") or nil
+        if remote then
+            remote:FireServer("Strength",100)
+            remote:FireServer("Health",100)
+        else
+            local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+            if Remotes and Remotes:FindFirstChild("Train") then
+                Remotes.Train:FireServer("Strength",100)
+                Remotes.Train:FireServer("Health",100)
+            end
+        end
+    end
+    StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="🔥 Treinamento Turbo Ativado!",Icon="",Duration=3})
+    -- efeito visual leve
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local effect = Instance.new("ParticleEmitter", LocalPlayer.Character.HumanoidRootPart)
+        effect.Color = ColorSequence.new(Color3.fromRGB(255,80,0))
+        effect.Size = NumberSequence.new(2)
+        effect.Rate = 12
+        effect.Lifetime = NumberRange.new(0.5)
+        game:GetService("Debris"):AddItem(effect,1)
+    end
+end)
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[🚀] 7. MODO FLY + SPEED
+
+local flyTab = TabFrames[5]
+local flying = false
+local speed = false
+local flyBtn = Instance.new("TextButton", flyTab)
+flyBtn.Text = "🚀 Ativar Modo Voo"
+flyBtn.Size = UDim2.new(0, 180, 0, 40)
+flyBtn.Position = UDim2.new(0,10,0,10)
+flyBtn.Font = Enum.Font.GothamBold
+flyBtn.TextColor3 = Color3.fromRGB(0,255,255)
+flyBtn.BackgroundColor3 = Color3.fromRGB(10,30,30)
+Instance.new("UICorner", flyBtn).CornerRadius = UDim.new(0, 10)
+flyBtn.Name = "FlyBtn"
+
+local speedBtn = Instance.new("TextButton", flyTab)
+speedBtn.Text = "⚡ Ativar Speed"
+speedBtn.Size = UDim2.new(0, 180, 0, 40)
+speedBtn.Position = UDim2.new(0,10,0,60)
+speedBtn.Font = Enum.Font.GothamBold
+speedBtn.TextColor3 = Color3.fromRGB(0,255,255)
+speedBtn.BackgroundColor3 = Color3.fromRGB(10,30,30)
+Instance.new("UICorner", speedBtn).CornerRadius = UDim.new(0, 10)
+speedBtn.Name = "SpeedBtn"
+
+flyBtn.MouseButton1Click:Connect(function()
+    playClick()
+    flying = not flying
+    flyBtn.Text = flying and "🚀 Voo ATIVADO" or "🚀 Ativar Modo Voo"
+    StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="Modo Voo "..(flying and "Ativado!" or "Desativado!"),Icon="",Duration=3})
+end)
+speedBtn.MouseButton1Click:Connect(function()
+    playClick()
+    speed = not speed
+    speedBtn.Text = speed and "⚡ Speed ATIVADO" or "⚡ Ativar Speed"
+    StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="Modo Speed "..(speed and "Ativado!" or "Desativado!"),Icon="",Duration=3})
+end)
+
+RunService.Heartbeat:Connect(function()
+    if flying and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character.Humanoid.PlatformStand = true
+        local root = LocalPlayer.Character.HumanoidRootPart
+        local moveDir = Camera.CFrame.LookVector
+        root.Velocity = moveDir*60 + Vector3.new(0,30,0)
+    elseif LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.PlatformStand = false
+    end
+    if speed and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = 80
+    elseif LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = 24
+    end
+end)
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[👑] 8. MODO ADMINISTRADOR REAL
+
+local admTab = TabFrames[6]
+local admin = false
+local adminBtn = Instance.new("TextButton", admTab)
+adminBtn.Text = "👑 Ativar Administrador"
+adminBtn.Size = UDim2.new(0, 200, 0, 40)
+adminBtn.Position = UDim2.new(0,10,0,10)
+adminBtn.Font = Enum.Font.GothamBold
+adminBtn.TextColor3 = Color3.fromRGB(255,255,0)
+adminBtn.BackgroundColor3 = Color3.fromRGB(40,40,10)
+Instance.new("UICorner", adminBtn).CornerRadius = UDim.new(0, 10)
+adminBtn.Name = "AdminBtn"
+
+local cmdBox = Instance.new("TextBox", admTab)
+cmdBox.Size = UDim2.new(0, 180, 0, 36)
+cmdBox.Position = UDim2.new(0,10,0,60)
+cmdBox.PlaceholderText = "Digite comando (:kick nome)"
+cmdBox.Font = Enum.Font.Gotham
+cmdBox.TextColor3 = Color3.fromRGB(255,255,255)
+cmdBox.BackgroundColor3 = Color3.fromRGB(30,30,10)
+Instance.new("UICorner", cmdBox).CornerRadius = UDim.new(0, 10)
+cmdBox.Name = "CmdBox"
+
+adminBtn.MouseButton1Click:Connect(function()
+    playClick()
+    admin = not admin
+    adminBtn.Text = admin and "👑 Administrador ATIVADO" or "👑 Ativar Administrador"
+    if admin then
+        -- Troca nome e efeito visual
+        LocalPlayer.Character.Humanoid.DisplayName = "👑 ADMINISTRADOR NEAJ"
+        local effect = Instance.new("ParticleEmitter", LocalPlayer.Character.HumanoidRootPart)
+        effect.Color = ColorSequence.new(Color3.fromRGB(255,255,0))
+        effect.Size = NumberSequence.new(3)
+        effect.Rate = 10
+        effect.Lifetime = NumberRange.new(1)
+        game:GetService("Debris"):AddItem(effect,2)
+        -- UI topo para todos
+        for _,plr in pairs(Players:GetPlayers()) do
+            pcall(function()
+                StarterGui:SetCore("ChatMakeSystemMessage",{Text="[👑 ADMINISTRADOR NEAJ ATIVADO]",Color=Color3.fromRGB(255,255,0),Font=Enum.Font.GothamBold})
+            end)
+        end
+    else
+        LocalPlayer.Character.Humanoid.DisplayName = LocalPlayer.Name
+    end
+end)
+
+local function runAdminCommand(cmd)
+    local args = cmd:split(" ")
+    local command = args[1]:lower()
+    local target = args[2]
+    if command == ":kick" and target then
+        for _,plr in pairs(Players:GetPlayers()) do
+            if plr.Name:lower():find(target:lower()) then
+                plr:Kick("👑 Você foi expulso pelo ADMIN NEAJ")
+            end
+        end
+    elseif command == ":freeze" and target then
+        for _,plr in pairs(Players:GetPlayers()) do
+            if plr.Name:lower():find(target:lower()) and plr.Character then
+                plr.Character.HumanoidRootPart.Anchored = true
+            end
+        end
+    elseif command == ":kill" and target then
+        for _,plr in pairs(Players:GetPlayers()) do
+            if plr.Name:lower():find(target:lower()) and plr.Character then
+                plr.Character.Humanoid.Health = 0
+            end
+        end
+    elseif command == ":tp" and target then
+        for _,plr in pairs(Players:GetPlayers()) do
+            if plr.Name:lower():find(target:lower()) and plr.Character then
+                LocalPlayer.Character:MoveTo(plr.Character.HumanoidRootPart.Position)
+            end
+        end
+    elseif command == ":fling" and target then
+        for _,plr in pairs(Players:GetPlayers()) do
+            if plr.Name:lower():find(target:lower()) and plr.Character then
+                local hrp = plr.Character:FindFirstChild("HumanoidRootPart")
+                if hrp then hrp.Velocity = Vector3.new(0,250,0) end
+            end
+        end
+    elseif command == ":invisible" then
+        for _,v in pairs(LocalPlayer.Character:GetChildren()) do
+            if v:IsA("BasePart") then v.Transparency = 1 end
+        end
+    elseif command == ":godmode" then
+        LocalPlayer.Character.Humanoid.MaxHealth = math.huge
+        LocalPlayer.Character.Humanoid.Health = math.huge
+    end
+end
+
+cmdBox.FocusLost:Connect(function(enter)
+    if enter and admin then
+        runAdminCommand(cmdBox.Text)
+        StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="Comando executado!",Duration=2})
+        cmdBox.Text = ""
+    end
+end)
+
+--━━━━━━━━━━━━━━━━━━━━━━━
+--[🌐] 9. OTIMIZAÇÃO DE MAPA (LAG MAP)
+
+local optTab = TabFrames[7]
+local lagMode = false
+local optBtn = Instance.new("TextButton", optTab)
+optBtn.Text = "⚡ Ativar Modo Desempenho"
+optBtn.Size = UDim2.new(0, 220, 0, 40)
+optBtn.Position = UDim2.new(0,10,0,10)
+optBtn.Font = Enum.Font.GothamBold
+optBtn.TextColor3 = Color3.fromRGB(0,255,80)
+optBtn.BackgroundColor3 = Color3.fromRGB(10,40,10)
+Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 10)
+optBtn.Name = "OptBtn"
+
+optBtn.MouseButton1Click:Connect(function()
+    playClick()
+    lagMode = not lagMode
+    optBtn.Text = lagMode and "⚡ Modo Desempenho ATIVADO" or "⚡ Ativar Modo Desempenho"
+    StarterGui:SetCore("SendNotification",{Title="NEAJHUB",Text="Modo Desempenho "..(lagMode and "Ativado!" or "Desativado!"),Icon="",Duration=3})
+    if lagMode then
+        for _,v in pairs(workspace:GetDescendants()) do
+            if v:IsA("BasePart") and (v.Name:lower():find("tree") or v.Name:lower():find("water")) then
+                v.Transparency = 1 v.CanCollide = false
+            elseif v:IsA("BasePart") and v.Name:lower():find("shadow") then
+                v:Destroy()
+            end
+        end
+        game.Lighting.GlobalShadows = false
+        game.Lighting.FogEnd = 300
+    else
+        -- Não tem como restaurar todos
